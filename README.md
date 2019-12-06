@@ -10,8 +10,11 @@ Deploy Lab:
 Download and run the AzureArcWorkShopLab.ps1, script is interactive for Authentication and Subscription Selection, Location is set to East US where VM family Es_V3 is avaliable. Testing script takes roughly 30 minutes or so to execute, due to vhd copying. Need to rewrite ARM deployment to somthing like: https://github.com/microsoft/DefendTheFlag 
 
 Enviroment Details:
+
 Domain: AzureLab.local
+
 User: azurelab
+
 Pass: Microsoft84!
 
 Links: 
