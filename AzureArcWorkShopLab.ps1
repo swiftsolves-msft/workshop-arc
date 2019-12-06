@@ -1,4 +1,4 @@
-﻿#[CmdletBinding()]
+#[CmdletBinding()]
 #Param(
 #  [Parameter(Mandatory=$True,Position=1)]
 #   [string]$Loc #,
@@ -48,7 +48,7 @@ $storename = $digit + "azulabstore"
 
 $storageAccount = New-AzStorageAccount -ResourceGroupName $RG -Name $storename -SkuName "Premium_LRS" -Location $loc
 
-$storekey = Get-AzStorageAccount -ResourceGroupName $RG -Name $storename
+$storekey = Get-AzStorageAccountKey -ResourceGroupName $RG -Name $storename
 $storekey = $storekey[0].Value
 
 #Create the context for the storage account which will be used to copy snapshot to the storage account 
@@ -56,17 +56,17 @@ $storekey = $storekey[0].Value
 $destinationContext = New-AzStorageContext –StorageAccountName $storename -StorageAccountKey $storekey 
 
 $containername = "labdisks"
-New-AzureStorageContainer -Context $destinationContext -Name $containername
+New-AzStorageContainer -Context $destinationContext -Name $containername
 
 #Copy the snapshots to the storage account 
 
-Start-AzureStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/DC.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob DC.vhd
-Start-AzureStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/FS.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob FS.vhd
-Start-AzureStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/UBUNTU.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob UBUNTU.vhd
-Start-AzureStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/LABVM.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob LABVM.vhd
+Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/DC.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob DC.vhd
+Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/FS.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob FS.vhd
+Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/UBUNTU.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob UBUNTU.vhd
+Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/LABVM.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob LABVM.vhd
 
 
-Get-AzureStorageBlobCopyState -Blob LABVM.vhd -Container $containername -Context $destinationContext -WaitForComplete
+Get-AzStorageBlobCopyState -Blob LABVM.vhd -Container $containername -Context $destinationContext -WaitForComplete
 
 $date = Get-Date
 Write-host $date
