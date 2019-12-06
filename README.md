@@ -20,4 +20,4 @@ Disks: https://azuworkshop.blob.core.windows.net/workshop-arc
 
 Nested Azure Hyper-V: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/nested-virtualization
 
-Need 2nd Layer VM to respond on VNET Resources ?: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization-azure-virtual-network
+Need 2nd Layer VM to respond to VNET Resources ?: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization-azure-virtual-network
