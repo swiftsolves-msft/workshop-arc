@@ -1,0 +1,215 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "defaultValue": "East US",
+      "type": "string"
+    },
+    "YourPublicIp": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "virtualMachineName": {
+      "defaultValue": "LABVM",
+      "type": "string"
+    },
+    "virtualMachineSize": {
+      "defaultValue": "Standard_E8s_v3",
+      "type": "string"
+    },
+    "virtualNetworkName": {
+      "defaultValue": "VNET-LAB",
+      "type": "string"
+    },
+    "storageAccountName": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "rgname": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "networkInterfaceName": {
+      "defaultValue": "LABVM-NIC",
+      "type": "string"
+    },
+    "networkSecurityGroupName": {
+      "defaultValue": "LABVM-NSG",
+      "type": "string"
+    },
+    "addressPrefix": {
+      "defaultValue": "192.168.0.0/22",
+      "type": "string"
+    },
+    "subnetName": {
+      "defaultValue": "Lab",
+      "type": "string"
+    },
+    "subnetPrefix": {
+      "defaultValue": "192.168.1.0/24",
+      "type": "string"
+    },
+    "publicIpAddressName": {
+      "defaultValue": "LABVM-PIP",
+      "type": "string"
+    },
+    "publicIpAddressType": {
+      "defaultValue": "Dynamic",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "vnetId": "[resourceId(parameters('rgname'),'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
+    "vhdStorageContainerName": "labdisks",
+    "OSDiskName": "LABVM",
+    "DCDiskName": "DC",
+    "FSDiskName": "FS",
+    "UBUNTUDiskName": "UBUNTU"
+  },
+  "resources": [
+    {
+      "name": "[parameters('virtualMachineName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('virtualMachineSize')]"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
+            }
+          ]
+        },
+        "storageProfile": {
+          "osDisk": {
+            "name": "LABVM",
+            "vhd": {
+              "uri": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('OSDiskName'), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "Attach",
+            "osType": "Windows"
+          },
+          "dataDisks": [
+            {
+              "name": "DC",
+              "lun": 0,
+              "vhd": {
+                "uri": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('DCDiskName'), '.vhd')]"
+              },
+              "createOption": "Attach"
+            },
+            {
+              "name": "FS",
+              "lun": 1,
+              "vhd": {
+                "uri": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('FSDiskName'), '.vhd')]"
+              },
+              "createOption": "Attach"
+            },
+            {
+              "name": "UBUNTU",
+              "lun": 2,
+              "vhd": {
+                "uri": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('UBUNTUDiskName'), '.vhd')]"
+              },
+              "createOption": "Attach"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "[parameters('virtualNetworkName')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2016-12-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('addressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('subnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetPrefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[parameters('networkInterfaceName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2016-09-01",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIpAddress": {
+                "id": "[resourceId(parameters('rgname'),'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId(parameters('rgname'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+        }
+      }
+    },
+    {
+      "name": "[parameters('publicIpAddressName')]",
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2016-11-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+      }
+    },
+    {
+      "name": "[parameters('networkSecurityGroupName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2016-09-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "default-allow-rdp",
+            "properties": {
+              "priority": 300,
+              "sourceAddressPrefix": "[parameters('YourPublicIP')]",
+              "protocol": "Tcp",
+              "destinationPortRange": "3389",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {}
+}
