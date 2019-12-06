@@ -65,6 +65,8 @@ Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/worksh
 Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/UBUNTU.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob UBUNTU.vhd
 Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/LABVM.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob LABVM.vhd
 
+#Future build logic to conditional check async maybe do loop and then allow exit into deployment phase once all copies are done, 
+#also try catch exit on a copy error
 
 Get-AzStorageBlobCopyState -Blob LABVM.vhd -Container $containername -Context $destinationContext -WaitForComplete
 
@@ -84,11 +86,7 @@ New-AzResourceGroupDeployment -Name LabVMDeployment -ResourceGroupName $RG -Mode
 $Browser=new-object -com internetexplorer.application
 
 $URL = "https://ms.portal.azure.com/#resource/subscriptions/" + $SubId + "/resourceGroups/" + $RG + "/overview"
-
-
 $Browser.navigate2($URL)
-
-
 $Browser.visible=$true
 
 $date = Get-Date
