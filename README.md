@@ -7,7 +7,7 @@ Azure Subscription, Azure Storage Explorer, Latest Azure PowerShell - https://gi
 
 Deploy Lab:
 
-Download and run the AzureWorkShopLab.ps1, script is interactive for Authentication and Subscription Selection, Location is set to East US where VM family Es_V3 is avaliable. Testing script take 30 minutes or so to execute.
+Download and run the AzureArcWorkShopLab.ps1, script is interactive for Authentication and Subscription Selection, Location is set to East US where VM family Es_V3 is avaliable. Testing script take 30 minutes or so to execute.
 
 
 Links: 
