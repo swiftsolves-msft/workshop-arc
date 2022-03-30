@@ -19,7 +19,7 @@ Pass: Microsoft84!
 
 Links: 
 
-Disks: https://azuworkshop.blob.core.windows.net/workshop-arc
+Disks: https://azuworkshop2.blob.core.windows.net/workshop-arc
 
 Nested Azure Hyper-V: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/nested-virtualization
 
