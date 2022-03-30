@@ -60,10 +60,10 @@ New-AzStorageContainer -Context $destinationContext -Name $containername
 
 #Copy the snapshots to the storage account 
 
-Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/DC.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob DC.vhd
-Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/FS.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob FS.vhd
-Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/UBUNTU.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob UBUNTU.vhd
-Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc/LABVM.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob LABVM.vhd
+Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc2/DC.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob DC.vhd
+Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc2/FS.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob FS.vhd
+Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc2/UBUNTU.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob UBUNTU.vhd
+Start-AzStorageBlobCopy -SrcUri https://azuworkshop.blob.core.windows.net/workshop-arc2/LABVM.vhd -DestContainer $containername -DestContext $destinationContext -DestBlob LABVM.vhd
 
 #Future build logic to conditional check async maybe do loop and then allow exit into deployment phase once all copies are done, 
 #also try catch exit on a copy error
