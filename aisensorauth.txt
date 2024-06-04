@@ -1,0 +1,4 @@
+  "AadClientId": "b26b7ce6-cd23-4858-bec6-380218e3332d",
+  "AadSecret": "5cM8Q~oQTnAJdQO4mRn6l_VOMZ0k3y2GQ8ZTDbkx",
+  "AadTenantDomain": "azuresecurityops.com",
+  "AadTenantId": "bd501e4e-b8b4-4303-8b04-2c37cf0818a6",
